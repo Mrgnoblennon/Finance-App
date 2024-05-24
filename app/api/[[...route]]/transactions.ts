@@ -14,6 +14,7 @@ import {
   accounts,
 
 } from "@/db/schema";
+import { TrendingUp } from "lucide-react";
 
 const app = new Hono()
   .get(
@@ -134,6 +135,38 @@ const app = new Hono()
 
       return c.json({ data });
   })
+  .post(
+    "/bulk-create",
+    clerkMiddleware(),
+    zValidator(
+      "json",
+      z.array(
+        insertTransactionSchema.omit({
+          id: true,
+        }),
+      ),
+    ),
+    async (c) => {
+      const auth = getAuth(c);
+      const values = c.req.valid("json");
+
+      if (!auth?.userId) {
+        return c.json({ error: "Unauthorised"}, 401);
+      }
+
+      const data = await db
+        .insert(transactions)
+        .values(
+          values.map((value) => ({
+            id: createId(),
+            ...value,
+          }))
+        )
+        .returning();
+
+      return c.json({ data });
+    }
+  )
   .post(
     "/bulk-delete",
     clerkMiddleware(),
