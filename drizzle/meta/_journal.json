@@ -22,6 +22,13 @@
       "when": 1716445303372,
       "tag": "0002_perpetual_wonder_man",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1716480732314,
+      "tag": "0003_absurd_dexter_bennett",
+      "breakpoints": true
     }
   ]
 }
