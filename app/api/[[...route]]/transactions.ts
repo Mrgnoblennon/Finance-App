@@ -33,15 +33,15 @@ const app = new Hono()
         return c.json({ error: "Unauthorised" }, 401);
       }
 
-      const defaultTo = new Date();
-      const defaultFrom = subDays(defaultTo, 30);
+    const defaultTo = new Date();
+    const defaultFrom = subDays(defaultTo, 30);
 
-      const startDate = from
-        ? parse(from, "yyyy-MM-dd", new Date())
-        : defaultFrom;
-      const endDate = from
-        ? parse(from, "yyyy-MM-dd", new Date())
-        : defaultFrom;
+    const startDate = from
+      ? parse(from, "yyyy-MM-dd", new Date())
+      : defaultFrom;
+    const endDate = to
+      ? parse(to, "yyyy-MM-dd", new Date())
+      : defaultTo;
 
     const data = await db
       .select({
@@ -66,7 +66,9 @@ const app = new Hono()
           lte(transactions.date, endDate),
         )
       )
-      .orderBy(desc(transactions.date))
+      .orderBy(desc(transactions.date));
+
+      console.log({ data });
 
     return c.json({ data });
   })
