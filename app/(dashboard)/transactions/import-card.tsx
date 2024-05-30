@@ -9,7 +9,7 @@ import {
   CardContent,
   CardTitle,
 } from "@/components/ui/card";
-import { convertAmountToMiliunits } from "@/lib/utils";
+import { convertAmountToMilliunits } from "@/lib/utils";
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss";
 const outputFormat = "yyyy-MM-dd";
@@ -99,7 +99,7 @@ export const ImportCard = ({
 
     const formattedData = arrayOfData.map((item) =>  ({
       ...item,
-      amount: convertAmountToMiliunits(parseFloat(item.amount)),
+      amount: convertAmountToMilliunits(parseFloat(item.amount)),
       date: format(parse(item.date, dateFormat, new Date()), outputFormat)
     }));
 

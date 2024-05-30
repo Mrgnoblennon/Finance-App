@@ -33,11 +33,11 @@ const app = new Hono()
     }
 
     const defaultTo = new Date();
-    const deafaultFrom = subDays(defaultTo, 30);
+    const defaultFrom = subDays(defaultTo, 30);
 
      const startDate = from
       ? parse(from, "yyyy-MM-dd", new Date())
-      : deafaultFrom;
+      : defaultFrom;
     const endDate = to 
       ? parse(to, "yyyy-MM-dd", new Date())
       : defaultTo;
@@ -45,6 +45,12 @@ const app = new Hono()
     const periodLength = differenceInDays(endDate, startDate) + 1;
     const lastPeriodStart = subDays(startDate, periodLength);
     const lastPeriodEnd = subDays(endDate, periodLength);
+
+    console.log('startDate:', startDate);
+    console.log('endDate:', endDate);
+    console.log('lastPeriodStart:', lastPeriodStart);
+    console.log('lastPeriodEnd:', lastPeriodEnd);
+
 
     async function fetchFinancialData(
       userId: string,
@@ -82,14 +88,18 @@ const app = new Hono()
     );
     const [lastPeriod] = await fetchFinancialData(
       auth.userId,
-      startDate,
-      endDate,
+      lastPeriodStart,
+      lastPeriodEnd,
     );
 
+    console.log('currentPeriod:', currentPeriod);
+    console.log('lastPeriod:', lastPeriod);
+
+    
     const incomeChange = calculatePercentageChange(
       currentPeriod.income,
       lastPeriod.income,
-    );
+      );
 
     const expensesChange = calculatePercentageChange(
       currentPeriod.expenses,
@@ -138,9 +148,9 @@ const app = new Hono()
     const topCategories = category.slice(0, 3);
     const otherCategories = category.slice(3);
     const otherSum = otherCategories
-        .reduce((sum, current) => sum + current.value, 0);
+      .reduce((sum, current) => sum + current.value, 0);
     
-    const finalCategories = topCategories;
+    const finalCategories = topCategories
     if (otherCategories.length > 0) {
       finalCategories.push({
         name: "Other",
@@ -153,7 +163,6 @@ const app = new Hono()
         date: transactions.date,
         income: sql`SUM(CASE WHEN ${transactions.amount} >= 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
         expenses: sql`SUM(CASE WHEN ${transactions.amount} < 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
-
       })
       .from(transactions)
       .innerJoin(

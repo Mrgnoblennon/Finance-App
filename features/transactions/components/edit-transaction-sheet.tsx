@@ -14,7 +14,7 @@ import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 
-import { convertAmountFromMiliunits } from "@/lib/utils";
+import { convertAmountFromMilliunits } from "@/lib/utils";
 
 
 import { useConfirm } from "@/hooks/use-confirm";

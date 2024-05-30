@@ -1,25 +1,25 @@
 import { twMerge } from "tailwind-merge"
 import { type ClassValue, clsx } from "clsx"
-import { eachDayOfInterval, isSameDay } from "date-fns";
+import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 };
 
-export function convertAmountFromMiliunits(amount: number) {
+export function convertAmountFromMilliunits(amount: number) {
   return amount / 1000;
 };
 
-export function convertAmountToMiliunits(amount: number) {
+export function convertAmountToMilliunits(amount: number) {
   return Math.round(amount * 1000);
 };
 
 export function formatCurrency(value: number) {
-  const finalValue = convertAmountFromMiliunits(value)
+  const finalValue = convertAmountFromMilliunits(value)
 
-  return Intl.NumberFormat("en-US", {
+  return Intl.NumberFormat("en-AU", {
     style: "currency",
-    currency: "USD",
+    currency: "AUD",
     minimumFractionDigits: 2,
   }).format(value);
 };
@@ -33,7 +33,7 @@ export function calculatePercentageChange(
   }
 
   return ((current - previous) / previous) * 100
-}
+};
 
 export function fillMissingDays(
   activeDays: {
@@ -69,3 +69,40 @@ export function fillMissingDays(
 
   return transactionsByDay;
 };
+
+type Period = {
+  from: string | Date | undefined;
+  to: string | Date | undefined;
+}
+
+export function formatDateRange (period?: Period) {
+  const defaultTo = new Date();
+  const defaultFrom = subDays(defaultTo, 30);
+
+  if (!period?.from) {
+    return `${format(defaultFrom, "LLL dd")} - ${format(defaultTo, "LLL dd, y")}`
+  }
+
+  if (period.to) {
+    return `${format(period.from, "LLL dd")} - ${format(period.to, "LLL dd, y")}`
+  }
+
+  return format(period.from, "LLL dd y");
+};
+
+export function formatPercentage(
+  value: number,
+  options: { addPrefix?: boolean } = {
+    addPrefix: false,
+  },
+) {
+  const result = new Intl.NumberFormat("en-AU", {
+    style: "percent",
+  }).format(value / 100);
+
+  if (options.addPrefix && value > 0) {
+    return `+${result}`;
+  }
+
+  return result
+}

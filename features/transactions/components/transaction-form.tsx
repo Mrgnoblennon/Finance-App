@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { convertAmountToMiliunits } from "@/lib/utils";
+import { convertAmountToMilliunits } from "@/lib/utils";
 
 const formSchema = z.object({
   date: z.coerce.date(),
@@ -67,11 +67,11 @@ export const TransactionForm = ({
 
   const handleSubmit = (values: FormValues) => {
     const amount = parseFloat(values.amount);
-    const amountInMiliunits = convertAmountToMiliunits(amount);
+    const amountInMilliunits = convertAmountToMilliunits(amount);
 
     onSubmit({
       ...values,
-      amount: amountInMiliunits
+      amount: amountInMilliunits
     });
   };
 
