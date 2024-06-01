@@ -35,4 +35,6 @@ A Finance SaaS Platform with ability to track your income and expenses, categori
 
 ## Deployed Application
 
-App deployment still to come.
+Check out the app here live.
+
+[Finance App](https://finance-app-omega-gules.vercel.app/)
